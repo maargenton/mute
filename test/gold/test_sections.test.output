@@ -1,0 +1,36 @@
+test/test_sections.cpp:5: enter: Scenario: first scenario
+test/test_sections.cpp:6: enter: given something
+test/test_sections.cpp:7: enter: when doing something
+test/test_sections.cpp:8: enter: then something happens
+test/test_sections.cpp:8: leave: then something happens
+test/test_sections.cpp:7: leave: when doing something
+test/test_sections.cpp:6: leave: given something
+test/test_sections.cpp:5: leave: Scenario: first scenario
+
+test/test_sections.cpp:5: enter: Scenario: first scenario
+test/test_sections.cpp:6: enter: given something
+test/test_sections.cpp:7: enter: when doing something
+test/test_sections.cpp:10: enter: then something else happens
+test/test_sections.cpp:10: leave: then something else happens
+test/test_sections.cpp:7: leave: when doing something
+test/test_sections.cpp:6: leave: given something
+test/test_sections.cpp:5: leave: Scenario: first scenario
+
+test/test_sections.cpp:16: enter: first test
+test/test_sections.cpp:17: enter: something
+test/test_sections.cpp:18: enter: doing something
+test/test_sections.cpp:19: enter: something happens
+test/test_sections.cpp:19: leave: something happens
+test/test_sections.cpp:18: leave: doing something
+test/test_sections.cpp:17: leave: something
+test/test_sections.cpp:16: leave: first test
+
+test/test_sections.cpp:16: enter: first test
+test/test_sections.cpp:17: enter: something
+test/test_sections.cpp:18: enter: doing something
+test/test_sections.cpp:21: enter: something else happens
+test/test_sections.cpp:21: leave: something else happens
+test/test_sections.cpp:18: leave: doing something
+test/test_sections.cpp:17: leave: something
+test/test_sections.cpp:16: leave: first test
+

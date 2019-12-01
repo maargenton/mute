@@ -1,0 +1,28 @@
+test/test_require.cpp:5: enter: Scenario: Require prevents any further testing
+test/test_require.cpp:6: failed: false == true
+test/test_require.cpp:7: failed: false == true
+test/test_require.cpp:9: enter: given a section after failed require
+test/test_require.cpp:10: enter: then the section is not executed nor visible
+test/test_require.cpp:11: failed: false == true
+test/test_require.cpp:10: leave: then the section is not executed nor visible
+test/test_require.cpp:9: leave: given a section after failed require
+test/test_require.cpp:5: leave: Scenario: Require prevents any further testing
+
+test/test_require.cpp:17: enter: Scenario: Require is section allows further section
+test/test_require.cpp:21: enter: given a first section before any failed require
+test/test_require.cpp:22: enter: then the section is executed
+test/test_require.cpp:23: failed: v < 123 (0x7b,'{')
+    value: 123 (0x7b,'{')
+test/test_require.cpp:22: leave: then the section is executed
+test/test_require.cpp:21: leave: given a first section before any failed require
+test/test_require.cpp:17: leave: Scenario: Require is section allows further section
+
+test/test_require.cpp:17: enter: Scenario: Require is section allows further section
+test/test_require.cpp:27: enter: given a second section after a section containing s failed require
+test/test_require.cpp:28: enter: then the section is executed
+test/test_require.cpp:29: failed: v > 123 (0x7b,'{')
+    value: 123 (0x7b,'{')
+test/test_require.cpp:28: leave: then the section is executed
+test/test_require.cpp:27: leave: given a second section after a section containing s failed require
+test/test_require.cpp:17: leave: Scenario: Require is section allows further section
+

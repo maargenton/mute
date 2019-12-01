@@ -1,0 +1,34 @@
+test/test_checks.cpp:5: enter: Scenario: All checks are executed regarles of success
+test/test_checks.cpp:6: failed: false == true
+test/test_checks.cpp:7: failed: false == true
+test/test_checks.cpp:8: enter: given something
+test/test_checks.cpp:9: failed: false == true
+test/test_checks.cpp:10: failed: false == true
+test/test_checks.cpp:11: enter: when doing something
+test/test_checks.cpp:12: failed: false == true
+test/test_checks.cpp:13: failed: false == true
+test/test_checks.cpp:14: enter: then something happens
+test/test_checks.cpp:15: failed: false == true
+test/test_checks.cpp:16: failed: false == true
+test/test_checks.cpp:14: leave: then something happens
+test/test_checks.cpp:11: leave: when doing something
+test/test_checks.cpp:8: leave: given something
+test/test_checks.cpp:5: leave: Scenario: All checks are executed regarles of success
+
+test/test_checks.cpp:5: enter: Scenario: All checks are executed regarles of success
+test/test_checks.cpp:6: failed: false == true
+test/test_checks.cpp:7: failed: false == true
+test/test_checks.cpp:8: enter: given something
+test/test_checks.cpp:9: failed: false == true
+test/test_checks.cpp:10: failed: false == true
+test/test_checks.cpp:11: enter: when doing something
+test/test_checks.cpp:12: failed: false == true
+test/test_checks.cpp:13: failed: false == true
+test/test_checks.cpp:18: enter: then something else happens
+test/test_checks.cpp:19: failed: false == true
+test/test_checks.cpp:20: failed: false == true
+test/test_checks.cpp:18: leave: then something else happens
+test/test_checks.cpp:11: leave: when doing something
+test/test_checks.cpp:8: leave: given something
+test/test_checks.cpp:5: leave: Scenario: All checks are executed regarles of success
+
