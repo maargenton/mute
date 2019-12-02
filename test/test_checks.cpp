@@ -2,7 +2,7 @@
 
 #include "mute/mute.h"
 
-SCENARIO( "All checks are executed regarles of success", "" ) {
+SCENARIO( "All checks are executed regardless of success", "" ) {
     CHECK( false );
     CHECK( false );
     GIVEN( "something" ) {
