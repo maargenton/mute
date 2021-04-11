@@ -125,7 +125,7 @@ struct writer_t {
         if ( success ) {
             write( "passed: ", 8 );
         } else {
-            write( "failed: ", 8 );
+            write( "failed: expected ", 17 );
         }
     }
 };
@@ -758,7 +758,7 @@ static inline void run_all_tests( output_t& output ) {
                                                                                \
         template <typename output_t, typename value_t>                         \
         void write_details( output_t& out, value_t value ) const {             \
-            writer( out ).write( "    value: ", 11 );                          \
+            writer( out ).write( "    actual value: ", 18 );                   \
             write_description( out, value );                                   \
             writer( out ).write_newline();                                     \
         }                                                                      \

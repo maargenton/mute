@@ -3,4 +3,3 @@ test/test_name.cpp:5: leave: prefix1: first scenario
 
 test/test_name.cpp:8: enter: prefix2: second scenario
 test/test_name.cpp:8: leave: prefix2: second scenario
-

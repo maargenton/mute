@@ -33,4 +33,3 @@ test/test_sections.cpp:21: leave: something else happens
 test/test_sections.cpp:18: leave: doing something
 test/test_sections.cpp:17: leave: something
 test/test_sections.cpp:16: leave: first test
-

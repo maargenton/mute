@@ -25,13 +25,17 @@ end
 
 desc 'Build test binaries, gather test results and compare them to golden files'
 task :test do
-  system "make test"
+  system "make test" or exit(1)
+
+  success = true
   gold_files = Dir['test/**/gold/*']
   gold_files.each do |gold_file|
     output_file = File.join('build', gold_file).gsub('/gold/', '/')
     puts "Checking '#{output_file}' against gold file ..."
-    system "diff -B -u #{gold_file} #{output_file}" or exit!(1)
+    diff_success = system "diff -B -u #{gold_file} #{output_file}"
+    success &&= diff_success
   end
+  exit(1) if !success
 end
 
 desc 'Build and run test binaries, updates golden files from output'
@@ -79,29 +83,21 @@ end
 # file change and runs the unit test of the project.
 # ----------------------------------------------------------------------------
 
-begin
-  require 'watch'
-
-  desc 'Run unit tests everytime a source or test file is changed'
-  task :watch do
-    Watch.new( '**/*.{c,cc,cpp,h,hh,hpp,gold}' ) do
-      success = system "clear && rake"
-      print_separator( success )
-    end
+def watch( *glob )
+  yield unless block_given?
+  files = []
+  loop do
+    new_files = Dir[*glob].map {|file| File.mtime(file) }
+    yield if new_files != files
+    files = new_files
+    sleep 0.5
   end
+end
 
-rescue LoadError
-
-  desc 'Run unit tests everytime a source or test file is changed'
-  task :watch do
-    puts
-    puts "'rake watch' requires the watch gem to be available"
-    puts
-    puts "To install:"
-    puts "    gem install watch"
-    puts " or "
-    puts "    sudo gem install watch"
-    puts
-    fail
+desc 'Run unit tests everytime a source or test file is changed'
+task :watch do
+  watch( '**/*.{c,cc,cpp,h,hh,hpp}', 'test/gold/**/*.output' ) do
+    success = system "clear && rake"
+    print_separator( success )
   end
 end

@@ -1,7 +1,7 @@
 test/test_mute.cpp:5: enter: Scenario: something stringy
 test/test_mute.cpp:7: passed: v == true
-test/test_mute.cpp:8: failed: v > 124 (0x7c,'|')
-    value: 123 (0x7b,'{')
+test/test_mute.cpp:8: failed: expected v > 124 (0x7c,'|')
+    actual value: 123 (0x7b,'{')
 test/test_mute.cpp:5: leave: Scenario: something stringy
 
 test/test_mute.cpp:11: enter: Scenario: something else stringy
@@ -22,4 +22,3 @@ test/test_mute.cpp:11: enter: Scenario: something else stringy
 test/test_mute.cpp:19: enter: when something else
 test/test_mute.cpp:19: leave: when something else
 test/test_mute.cpp:11: leave: Scenario: something else stringy
-
