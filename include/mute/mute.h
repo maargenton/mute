@@ -42,6 +42,7 @@
 
 #pragma once
 #include <inttypes.h>
+#include <limits>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -138,115 +139,224 @@ writer_t<output_t> writer( output_t& out ) {
 
 // =============================================================================
 // Definition of write_description() methods for all basic types, used by
-// predicates and assertion function to display values of various kind.
+// predicates and assertion function to display values of various kinds.
 // =============================================================================
 
 namespace mute {
 
 // ---------------------------------------------------------------------------
-// write_description() for integers
+// write_description_xxx() implementation for integers; actual overloads of
+// write_description() functions need to be defined on primitive type (not
+// stdint types) to avoid ambiguous type resolution.
+
 template <typename output_t>
-void write_description( output_t& out, int32_t v ) {
-    char buf[32];
+void write_description_signed( output_t& out, int32_t v ) {
+    char buf[64];
     int  l = 0;
-    if ( v >= 0x20 && v < 0x7f ) {
-        l = snprintf( buf, sizeof( buf ), "%" PRId32 " (0x%02" PRIx32 ",'%c')", v, v, v );
-    } else if ( v <= 0xFF ) {
+    if ( v >= int32_t( 0x20 ) && v < int32_t( 0x7f ) ) {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId32 " (0x%02" PRIx32 ",'%c')", v,
+            uint32_t( uint8_t( v ) ), (char)v );
+
+    } else if ( v >= std::numeric_limits<int8_t>::min() && v <= std::numeric_limits<int8_t>::max() ) {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId32 " (0x%02" PRIx32 ")", v,
+            uint32_t( uint8_t( v ) ) );
+
+    } else if ( v >= std::numeric_limits<int16_t>::min() && v <= std::numeric_limits<int16_t>::max() ) {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId32 " (0x%04" PRIx32 ")", v,
+            uint32_t( uint16_t( v ) ) );
+
+    } else {
+        l = snprintf( buf, sizeof( buf ), "%" PRId32 " (0x%08" PRIx32 ")", v, uint32_t( v ) );
+    }
+
+    out.write( buf, l );
+}
+
+template <typename output_t>
+void write_description_signed64( output_t& out, int64_t v ) {
+    char buf[64];
+    int  l = 0;
+    if ( v >= int32_t( 0x20 ) && v < int32_t( 0x7f ) ) {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId32 " (0x%02" PRIx32 ",'%c')",
+            int32_t( v ), uint32_t( uint8_t( v ) ), (char)v );
+
+    } else if ( v >= std::numeric_limits<int8_t>::min() && v <= std::numeric_limits<int8_t>::max() ) {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId32 " (0x%02" PRIx32 ")", int32_t( v ),
+            uint32_t( uint8_t( v ) ) );
+
+    } else if ( v >= std::numeric_limits<int16_t>::min() && v <= std::numeric_limits<int16_t>::max() ) {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId32 " (0x%04" PRIx32 ")", int32_t( v ),
+            uint32_t( uint16_t( v ) ) );
+
+    } else if ( v >= std::numeric_limits<int32_t>::min() && v <= std::numeric_limits<int32_t>::max() ) {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId32 " (0x%08" PRIx32 ")", int32_t( v ),
+            uint32_t( v ) );
+
+    } else {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId64 " (0x%016" PRIx64 ")", int64_t( v ),
+            uint64_t( v ) );
+    }
+
+    out.write( buf, l );
+}
+
+template <typename output_t>
+void write_description_unsigned( output_t& out, uint32_t v ) {
+    char buf[64];
+    int  l = 0;
+    if ( v >= uint32_t( 0x20 ) && v < uint32_t( 0x7f ) ) {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId32 " (0x%02" PRIx32 ",'%c')", v, v, (char)v );
+
+    } else if ( v <= std::numeric_limits<uint8_t>::max() ) {
         l = snprintf( buf, sizeof( buf ), "%" PRId32 " (0x%02" PRIx32 ")", v, v );
-    } else if ( v <= 0xFFFF ) {
+
+    } else if ( v <= std::numeric_limits<uint16_t>::max() ) {
         l = snprintf( buf, sizeof( buf ), "%" PRId32 " (0x%04" PRIx32 ")", v, v );
+
     } else {
         l = snprintf( buf, sizeof( buf ), "%" PRId32 " (0x%08" PRIx32 ")", v, v );
     }
-    if ( l < sizeof( buf ) ) {
-        out.write( buf, l );
-    }
+
+    out.write( buf, l );
 }
 
 template <typename output_t>
-void write_description( output_t& out, uint32_t v ) {
-    char buf[32];
+void write_description_unsigned64( output_t& out, uint64_t v ) {
+    char buf[64];
     int  l = 0;
-    if ( v >= 0x20 && v < 0x7f ) {
-        l = snprintf( buf, sizeof( buf ), "%" PRIu32 " (0x%02" PRIx32 ",'%c')", v, v, v );
-    } else if ( v <= 0xFF ) {
-        l = snprintf( buf, sizeof( buf ), "%" PRIu32 " (0x%02" PRIx32 ")", v, v );
-    } else if ( v <= 0xFFFF ) {
-        l = snprintf( buf, sizeof( buf ), "%" PRIu32 " (0x%04" PRIx32 ")", v, v );
+    if ( v >= uint32_t( 0x20 ) && v < uint32_t( 0x7f ) ) {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId32 " (0x%02" PRIx32 ",'%c')",
+            uint32_t( v ), uint32_t( v ), (char)v );
+
+    } else if ( v <= std::numeric_limits<uint8_t>::max() ) {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId32 " (0x%02" PRIx32 ")", uint32_t( v ),
+            uint32_t( v ) );
+
+    } else if ( v <= std::numeric_limits<uint16_t>::max() ) {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId32 " (0x%04" PRIx32 ")", uint32_t( v ),
+            uint32_t( v ) );
+
+    } else if ( v <= std::numeric_limits<uint32_t>::max() ) {
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId32 " (0x%08" PRIx32 ")", uint32_t( v ),
+            uint32_t( v ) );
+
     } else {
-        l = snprintf( buf, sizeof( buf ), "%" PRIu32 " (0x%08" PRIx32 ")", v, v );
+        l = snprintf(
+            buf, sizeof( buf ), "%" PRId64 " (0x%016" PRIx64 ")", uint64_t( v ),
+            uint64_t( v ) );
     }
-    if ( l < sizeof( buf ) ) {
-        out.write( buf, l );
-    }
+
+    out.write( buf, l );
 }
 
 template <typename output_t>
-void write_description( output_t& out, int8_t v ) {
-    write_description( out, int32_t( v ) );
-}
-
-template <typename output_t>
-void write_description( output_t& out, int16_t v ) {
-    write_description( out, int32_t( v ) );
-}
-
-template <typename output_t>
-void write_description( output_t& out, char v ) {
-    write_description( out, uint32_t( v ) );
-}
-
-template <typename output_t>
-void write_description( output_t& out, uint8_t v ) {
-    write_description( out, uint32_t( v ) );
-}
-
-template <typename output_t>
-void write_description( output_t& out, uint16_t v ) {
-    write_description( out, uint32_t( v ) );
-}
-
-// ---------------------------------------------------------------------------
-// write_description() for 64 bits integers
-
-template <typename output_t>
-void write_description( output_t& out, int64_t v ) {
+void write_description_ptr( output_t& out, uintptr_t v ) {
     char buf[64];
-    int l = snprintf( buf, sizeof( buf ), "%" PRId64 " (0x%016" PRIx64 ")", v, v );
-    if ( l < sizeof( buf ) ) {
-        out.write( buf, l );
+    int  l = 0;
+
+    if ( sizeof( uintptr_t ) == 4 ) {
+        l = snprintf( buf, sizeof( buf ), "[0x%08" PRIxPTR "]", v );
+    } else if ( sizeof( uintptr_t ) == 8 ) {
+        l = snprintf( buf, sizeof( buf ), "[0x%016" PRIxPTR "]", v );
     }
+
+    out.write( buf, l );
 }
 
 template <typename output_t>
-void write_description( output_t& out, uint64_t v ) {
-    char buf[64];
-    int l = snprintf( buf, sizeof( buf ), "%" PRIu64 " (0x%016" PRIx64 ")", v, v );
-    if ( l < sizeof( buf ) ) {
-        out.write( buf, l );
-    }
-}
-
-// ---------------------------------------------------------------------------
-// write_description() for pointer types
-
-template <typename output_t>
-void write_description( output_t& out, uintptr_t v ) {
-    char buf[32];
-    int  l = snprintf( buf, sizeof( buf ), "0x%016" PRIxPTR, v );
-    if ( l < sizeof( buf ) ) {
-        out.write( buf, l );
-    }
+void write_description( output_t& out, signed char v ) {
+    write_description_signed( out, int32_t( v ) );
 }
 
 template <typename output_t>
-void write_description( output_t& out, intptr_t v ) {
-    write_description( out, uintptr_t( v ) );
+void write_description( output_t& out, unsigned char v ) {
+    write_description_unsigned( out, uint32_t( v ) );
+}
+
+template <typename output_t>
+void write_description( output_t& out, signed short int v ) {
+    write_description_signed( out, int32_t( v ) );
+}
+
+template <typename output_t>
+void write_description( output_t& out, unsigned short int v ) {
+    write_description_unsigned( out, uint32_t( v ) );
+}
+
+template <typename output_t>
+void write_description( output_t& out, signed int v ) {
+    if ( sizeof( v ) > 4 )
+        write_description_signed64( out, int64_t( v ) );
+    else
+        write_description_signed( out, int32_t( v ) );
+}
+
+template <typename output_t>
+void write_description( output_t& out, unsigned int v ) {
+    if ( sizeof( v ) > 4 )
+        write_description_signed64( out, uint64_t( v ) );
+    else
+        write_description_signed( out, uint32_t( v ) );
+}
+
+template <typename output_t>
+void write_description( output_t& out, signed long int v ) {
+    if ( sizeof( v ) > 4 )
+        write_description_signed64( out, int64_t( v ) );
+    else
+        write_description_signed( out, int32_t( v ) );
+}
+
+template <typename output_t>
+void write_description( output_t& out, unsigned long int v ) {
+    if ( sizeof( v ) > 4 )
+        write_description_signed64( out, uint64_t( v ) );
+    else
+        write_description_signed( out, uint32_t( v ) );
+}
+
+template <typename output_t>
+void write_description( output_t& out, signed long long int v ) {
+    if ( sizeof( v ) > 4 )
+        write_description_signed64( out, int64_t( v ) );
+    else
+        write_description_signed( out, int32_t( v ) );
+}
+
+template <typename output_t>
+void write_description( output_t& out, unsigned long long int v ) {
+    if ( sizeof( v ) > 4 )
+        write_description_signed64( out, uint64_t( v ) );
+    else
+        write_description_signed( out, uint32_t( v ) );
 }
 
 template <typename output_t>
 void write_description( output_t& out, const void* v ) {
-    write_description( out, uintptr_t( v ) );
+    write_description_ptr( out, uintptr_t( v ) );
+}
+
+template <typename output_t, typename T>
+void write_description( output_t& out, T* v ) {
+    write_description_ptr( out, uintptr_t( v ) );
+}
+
+template <typename output_t, typename T>
+void write_description( output_t& out, const T* v ) {
+    write_description_ptr( out, uintptr_t( v ) );
 }
 
 } // namespace mute
@@ -327,8 +437,8 @@ struct test_env_t {
 private:
     bool _tracking         = false;
     int  _depth            = 0;
-    int  _index[max_depth] = {0};
-    int  _count[max_depth] = {0};
+    int  _index[max_depth] = { 0 };
+    int  _count[max_depth] = { 0 };
 };
 
 // section_t represent an exclusive branch within a test case
@@ -617,20 +727,6 @@ static inline void run_all_tests( output_t& output ) {
     if ( !__MUTE_CHECK_THAT( __expr, __predicate ) ) {                         \
         continue;                                                              \
     }
-
-// #define CHECK( __expr )                                                        \
-//     mute::check( __test_env, __FILE__, __LINE__, MUTE_PP_STR( __expr ), ( __expr ) )
-
-// #define CHECK_THAT( __expr, __predicate )                                      \
-//     mute::check_that( __test_env, __FILE__, __LINE__, MUTE_PP_STR( __expr ), ( __expr ), __predicate )
-
-// #define REQUIRE( __expr )                                                                      \
-//     if ( !mute::check( __test_env, __FILE__, __LINE__, MUTE_PP_STR( __expr ), ( __expr ) ) ) { \
-//         if ( __test_env.depth() > 0 ) {                                                        \
-//             continue;                                                                          \
-//         }                                                                                      \
-//         return;                                                                                \
-//     }
 
 // =============================================================================
 // Definition of common test predicates for numeric types
